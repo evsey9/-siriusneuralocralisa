@@ -28,10 +28,10 @@ def main(url = "", *kwargs):
         #os.remove('tempimg.png')
     #cv2.imshow("Faces found", cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     if (faces.size > 0):
-        msg = "Лица найдены, подождите:"
+        msg = "Лица найдены."
     else:
         msg = "Лица не найдены."
-    return[msg, *imgarray]
+    return(msg)
     #cv2.waitKey(0)
     #return("Script run successful.")
 #main()
