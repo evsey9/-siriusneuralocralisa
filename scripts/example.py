@@ -3,4 +3,4 @@
 #*kwargs должен присутствовать чтобы не вызывать ошибок.
 #return должен возвращать список.
 def main(arg1 = "", arg2 = "", arg3 = "", *kwargs):
-    return[arg1 + arg2 + arg3]
+    return(arg1 + arg2 + arg3)
