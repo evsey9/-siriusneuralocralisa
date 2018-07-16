@@ -6,7 +6,7 @@ cascpath = "data/haarcascade_frontalface_default.xml"
 faceCascade = cv2.CascadeClassifier(cascpath)
 def main(url = "", *kwargs):
     if (url==""):
-        return ["Пожалуйста введите URL изображения."]
+        return ("Пожалуйста введите URL изображения.")
     i = 0
     msg = ""
     imgarray = []
