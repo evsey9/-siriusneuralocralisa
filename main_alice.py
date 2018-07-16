@@ -64,7 +64,7 @@ def handle_dialog(req, res):
 
     # Обрабатываем ответ пользователя.
     command = req['request']['original_utterance'].split()
-    if command[0] in list(config_json["commands"].keys()) and config_json["commands"][command[0]["public"]]:
+    if command[0] in list(config_json["commands"].keys()):
         cmd = config_json["commands"][command[0]]["func"]
         cmdvalue = list(getattr(globals()[cmd], "main")(*command[1:]))
         res['response']['text'] = str(cmdvalue)
