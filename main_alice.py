@@ -66,8 +66,8 @@ def handle_dialog(req, res):
     command = req['request']['original_utterance'].split()
     if command[0] in list(config_json["commands"].keys()):
         cmd = config_json["commands"][command[0]]["func"]
-        cmdvalue = list(getattr(globals()[cmd], "main")(*command[1:]))
-        res['response']['text'] = str(cmdvalue)
+        cmdvalue = getattr(globals()[cmd], "main")(*command[1:])
+        res['response']['text'] = cmdvalue
         return
     #if req['request']['original_utterance'].lower() in [
     #    'ладно',
