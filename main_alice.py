@@ -55,6 +55,7 @@ def handle_dialog(req, res):
                 "random",
                 "facerec",
                 "help",
+                "words"
             ]
         }
 
