@@ -123,6 +123,14 @@ def handle_dialog(req, res):
                 elif command[0] == "stop":
                     sessionStorage[user_id]['fightMode'] = False
                     res['response']['text'] = str("You stop the battle.")
+                    sessionStorage[user_id]['suggests'] = [
+                        "random",
+                        "facerec",
+                        "help",
+                        "words",
+                        "fight"
+                    ]
+                    res['response']['buttons'] = get_suggests(user_id)
                     return
                 action = arcadeAction(user_id)
                 res['response']['text'] += action[5]
@@ -197,6 +205,13 @@ def arcadeAction(user_id):
         mode = "win"
         message = "You kill "+eName+ "! Congratulations!"
         sessionStorage[user_id]["fightMode"] = False
+        sessionStorage[user_id]['suggests'] = [
+            "random",
+            "facerec",
+            "help",
+            "words",
+            "fight"
+        ]
     elif (enemy_mp <= 5 and random.randint(0,100) <= 70):
         mode = "steal"
         stealamt = random.randint(2,3)
@@ -222,4 +237,11 @@ def arcadeAction(user_id):
         mode = "gameover"
         message += " You die! Game over!"
         sessionStorage[user_id]["fightMode"] = False
+        sessionStorage[user_id]['suggests'] = [
+            "random",
+            "facerec",
+            "help",
+            "words",
+            "fight"
+        ]
     return(pHP,pMP,eHP,eMP,mode,message)
