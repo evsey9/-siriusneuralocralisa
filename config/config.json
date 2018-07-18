@@ -1,10 +1,13 @@
 {
-    "greet":"Здравствуйте. Введите одну из команд: random, facerec, words и help.",
+    "greet":"Здравствуйте. Введите одну из команд: random, facerec, words, fight и help.",
     "responses": {
         "Привет": "Пока",
         "Пока": "Ну давай, иди отсюда!",
         "Да": "Нет"
     },
+    "nameaction":["Defeat","Spook","Ban","Romance"],
+    "name1":["Cuban","Ronald","Magaroth"],
+    "name2":["Pete", "McDonald", "Bannette"],
     "com_symbol": "!",
     "commands": {
         "random": {
