@@ -6,3 +6,6 @@ requests
 torchvision
 keras
 http://download.pytorch.org/whl/cu91/torch-0.4.0-cp36-cp36m-win_amd64.whl
+pandas
+numpy
+scipy
