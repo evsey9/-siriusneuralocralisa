@@ -1,9 +1,44 @@
-import matplotlib.pyplot as plt
+import pandas as pd
 import numpy as np
-import os
+import matplotlib.pyplot as plt
+import torch
+from torch import nn
+import torch.nn.functional as F
+from torch.autograd import Variable
+import time
 from PIL import Image
-from scipy.ndimage import rotate
+import os
+import PIL
+from PIL import ImageMath
 import requests
+from skimage import io
+from scipy.ndimage import rotate
+
+def main(url = "", *kwargs):
+    text = ""
+    if url == "":
+        return("Введите URL.")
+    try:
+        image = io.imread(url)
+    except:
+        return("Введите правильный URL.")
+
+    letter_list = splitter(image)
+    for x in range(len(letter_list)):
+        for y in range(len(letter_list[x])):
+            word = []
+            for z in range(len(letter_list[x][y])):
+                word.append(milinki(Image.fromarray(np.array(letter_list[x][y][z]).astype("uint8"))))
+                word[z] = word[z].reshape((120, 120))
+            get_model()
+            x1 = raspoznavanie(np.array(word))
+            word = spellcheck(x1)
+            text.append(word)
+    s = ' '
+    s = s.join(text)
+    return s
+
+
 
 
 def str_split(in_arr, out_list, acc=None, m=None):
@@ -152,9 +187,9 @@ def splitter(image, save_as_image=False, path=None):
         i += 1
     str_list = np.array(str_list_new)
 
-    # представим, что это работает 
+    # представим, что это работает
 
-    # Разделение на слова 
+    # Разделение на слова
 
     word_list = []
     for i in range(str_list.shape[0]):
@@ -214,12 +249,12 @@ def splitter(image, save_as_image=False, path=None):
         letter_list_new.append(str1)
     letter_list = letter_list_new
 
-    # Сохранение в файл 
+    # Сохранение в файл
 
     # все буквы сохраняются таким образом:
-    # 
+    #
     # pathfile/img{номер строчки}.{номер слова}.{номер буквы}.png
-    # 
+    #
     # Образец:
     # <code>img0.0.0.png<endcode>
 
@@ -233,7 +268,7 @@ def splitter(image, save_as_image=False, path=None):
             for y in range(len(letter_list[x])):
                 for z in range(len(letter_list[x][y])):
                     Image.fromarray(letter_list[x][y][z]).convert('L').save(
-                        path_file + 'img' + str(x) + '.' + str(y) + '.' + str(z) + '.jpg')
+                        path + 'img' + str(x) + '.' + str(y) + '.' + str(z) + '.jpg')
 
     return letter_list
 
@@ -257,3 +292,40 @@ def spellcheck(word):
             return variants[0]
         else:
             return word
+
+
+
+def milinki(l, size=None):
+  if size == None:
+    size = 120
+  basewidth = size
+  l= l.resize((basewidth,basewidth), Image.ANTIALIAS)
+  l = np.array(l.getdata())
+  return l
+
+class Flatten(nn.Module):
+    def forward(self, input):
+        return input.view(input.size(0), -1) #переделвает размер матрицы
+def get_model():
+
+  model = nn.Sequential()
+  model.add_module('conv1', nn.Conv1d(120, 316, kernel_size=(5), stride=1, padding=0)) #cвёрточный слой падинг обораивает картинку нулями чтобы она не сжималась
+  model.add_module('conv2', nn.Conv1d(316, 632, kernel_size=(5), stride=1, padding=0)) # страйд- на сколько клеток двигаем ядро
+
+  model.add_module("maxpool1", torch.nn.MaxPool2d(kernel_size=4))   #ядро 2х2 превращается в 1 пиксель
+  model.add_module('dropout1', nn.Dropout(p=0.25))                  # минус 1/4 связи
+  model.add_module("flatten", Flatten())                            #растягмвает картинку в вектор 3*3=9
+
+  model.add_module("linear1", torch.nn.Linear(4424, 200))            #линер=декс, типа получилось 384 нейрона
+  model.add_module('dropout1', nn.Dropout(p=0.5))                    #ещё минус пол связей
+  model.add_module("linear2", torch.nn.Linear(200, 33))           #выходной слой
+
+def raspoznavanie(X_batch):
+  model = torch.load("model")
+  logits = model(Variable(torch.FloatTensor(X_batch)))        #логиты ответы модели
+  y_pred = logits.max(1)[1].data.numpy()
+  bukvi_pred = []
+  bukvi = ["А","Б","В","Г","Д","Е","Ё","Ж","З","И","Й","К","Л","М","Н","О","П","Р","С","Т","У","Ф","Х","Ц","Ч","Ш","Щ","Ь","Ы","Ъ","Э","Ю","Я"]
+  for i in range(len(y_pred)):
+    bukvi_pred.append(bukvi[y_pred[i]])
+  return ''.join(bukvi_pred)

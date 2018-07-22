@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
+from skimage import io
 from torch import nn
 import torch.nn.functional as F
 from torch.autograd import Variable
@@ -11,7 +12,7 @@ import os
 import PIL
 from PIL import ImageMath
 
-def milinki(l, size=None)
+def milinki(l, size=None):
   if size == None:
     size = 120
   basewidth = size
