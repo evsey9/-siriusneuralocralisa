@@ -13,7 +13,7 @@ def main(url = "", *kwargs):
         for y in range(len(letter_list[x])):
             word = []
             for z in range(len(letter_list[x][y])):
-                word.append(milinki(Image.fromarray(np.array(letter_list[x][y][z]).astype("uint8")), size=60))
+                word.append(milinki(Image.fromarray(np.array(letter_list[x][y][z]).astype("uint8"))))
                 word[z] = word[z].reshape((120, 120))
             get_model()
             x1 = raspoznavanie(np.array(word))
