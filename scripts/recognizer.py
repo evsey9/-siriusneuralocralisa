@@ -35,7 +35,7 @@ def get_model():
   model.add_module("linear2", torch.nn.Linear(200, 33))           #выходной слой
 
 def raspoznavanie(X_batch):
-  model = torch.load("model_33.pt")
+  model = torch.load("model.pt")
   logits = model(Variable(torch.FloatTensor(X_batch)))        #логиты ответы модели
   y_pred = logits.max(1)[1].data.numpy()
   bukvi_pred = []
