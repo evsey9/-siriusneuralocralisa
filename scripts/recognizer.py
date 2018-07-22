@@ -11,8 +11,10 @@ import os
 import PIL
 from PIL import ImageMath
 
-def milinki(l)
-  basewidth = 120
+def milinki(l, size=None)
+  if size == None:
+    size = 120
+  basewidth = size
   l= l.resize((basewidth,basewidth), Image.ANTIALIAS)
   l = np.array(l.getdata())
   return l
